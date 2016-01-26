@@ -1,0 +1,42 @@
+<html>
+ <head>
+  <script type="text/javascript" src="2d.js"></script>
+  <script type="text/javascript" src="buhin.js"></script>
+  <script type="text/javascript" src="curve.js"></script>
+  <script type="text/javascript" src="kage.js"></script>
+  <script type="text/javascript" src="kagecd.js"></script>
+  <script type="text/javascript" src="kagedf.js"></script>
+  <script type="text/javascript" src="polygon.js"></script>
+  <script type="text/javascript" src="polygons.js"></script>
+  <script type="text/javascript">
+function draw() {
+ var canvas = document.getElementById("canvas");
+ var ctx = canvas.getContext("2d");
+ 
+ var kage = new Kage();
+ kage.kUseCurve = false;
+ var polygons = new Polygons();
+ 
+ kage.kBuhin.push("u9ebb", "1:0:2:40:37:143:37$4:22:5:143:37:12:169:170:169:175:171");
+ kage.kBuhin.push("u9ebb-2", "99:0:0:0:0:200:200:u9ebb:0:0:0");
+ 
+ kage.makeGlyph(polygons, "u9ebb-2");
+ 
+ ctx.fillStyle = "rgb(0, 0, 0)";
+ 
+ for(var i = 0; i < polygons.array.length; i++){
+  ctx.beginPath();
+  ctx.moveTo(polygons.array[i].array[0].x, polygons.array[i].array[0].y);
+  for(var j = 1; j < polygons.array[i].array.length; j++){
+   ctx.lineTo(polygons.array[i].array[j].x, polygons.array[i].array[j].y);
+  }
+  ctx.closePath();
+  ctx.fill();
+ }
+}
+  </script>
+ </head>
+ <body onload="draw()">
+   <canvas style="border: 1px #ccc solid;" id="canvas" width="200" height="200"></canvas>
+ </body>
+</html>
