@@ -182,7 +182,7 @@ function cdDrawCurveU(kage, polygons, x1, y1, sx1, sy1, sx2, sy2, x2, y2, ta1, t
           if((a1 == 7 || a1 == 27) && a2 == 0){ // L2RD: fatten
             deltad = Math.pow(t, hosomi) * kage.kL2RDfatten;
           }
-          else if((a1 == 7 || a1 == 27)){
+          else if(a1 == 7 || a1 == 27){
             deltad = Math.pow(t, hosomi);
           }
           else if(a2 == 7){
@@ -289,7 +289,7 @@ function cdDrawCurveU(kage, polygons, x1, y1, sx1, sy1, sx2, sy2, x2, y2, ta1, t
         if((a1 == 7 || a1 == 27) && a2 == 0){ // L2RD: fatten
           deltad = Math.pow(t, hosomi) * kage.kL2RDfatten;
         }
-        else if((a1 == 7 || a1 == 27)){
+        else if(a1 == 7 || a1 == 27){
           deltad = Math.pow(t, hosomi);
           deltad = Math.pow(deltad, 0.7); // make fatten
         }
@@ -450,7 +450,7 @@ function cdDrawCurveU(kage, polygons, x1, y1, sx1, sy1, sx2, sy2, x2, y2, ta1, t
       }
     }
     
-    if((a1 == 22 || a1 == 27)){ //box's up-right corner, any time same degree
+    if(a1 == 22 || a1 == 27){ //box's up-right corner, any time same degree
       poly = new Polygon();
       poly.push(x1 - cornerOffset - kMinWidthT, y1 - kage.kMinWidthY);
       poly.push(x1 - cornerOffset, y1 - kage.kMinWidthY - kage.kWidth);
@@ -892,7 +892,7 @@ function cdDrawLine(kage, polygons, tx1, ty1, tx2, ty2, ta1, ta2){
         polygons.push(poly);
       }
       
-      if((a1 == 22 || a1 == 27)){ //box's right top corner
+      if(a1 == 22 || a1 == 27){ //box's right top corner
         poly = new Polygon();
         poly.push(x1 - kMinWidthT, y1 - kage.kMinWidthY);
         poly.push(x1, y1 - kage.kMinWidthY - kage.kWidth);
@@ -1161,7 +1161,7 @@ function cdDrawLine(kage, polygons, tx1, ty1, tx2, ty2, ta1, ta2){
           polygons.push(poly);
         }
         
-        if((a1 == 22 || a1 == 27)){ //SHIKAKU MIGIUE UROKO NANAME DEMO MASSUGU MUKI
+        if(a1 == 22 || a1 == 27){ //SHIKAKU MIGIUE UROKO NANAME DEMO MASSUGU MUKI
           poly = new Polygon();
           poly.push(x1 - kMinWidthT, y1 - kage.kMinWidthY);
           poly.push(x1, y1 - kage.kMinWidthY - kage.kWidth);
