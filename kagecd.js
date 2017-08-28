@@ -160,7 +160,11 @@ function cdDrawCurveU(kage, polygons, x1, y1, sx1, sy1, sx2, sy2, x2, y2, ta1, t
             ib = Math.cos(ir) * (kMinWidthT);
           }
           else if(ix == 0){
-            ia = kMinWidthT;
+            if (iy < 0) {
+              ia = -kMinWidthT;
+            } else {
+              ia = kMinWidthT;
+            }
             ib = 0;
           }
           else{
@@ -267,7 +271,11 @@ function cdDrawCurveU(kage, polygons, x1, y1, sx1, sy1, sx2, sy2, x2, y2, ta1, t
           ib = Math.cos(ir) * (kMinWidthT);
         }
         else if(ix == 0){
-          ia = kMinWidthT;
+          if (iy < 0) {
+            ia = -kMinWidthT;
+          } else {
+            ia = kMinWidthT;
+          }
           ib = 0;
         }
         else{
@@ -728,7 +736,11 @@ function cdDrawCurveU(kage, polygons, x1, y1, sx1, sy1, sx2, sy2, x2, y2, ta1, t
           ib = Math.cos(ir) * kage.kMinWidthT;
         }
         else if(ix == 0){
-          ia = kage.kMinWidthT;
+          if (iy < 0) {
+            ia = -kage.kMinWidthT;
+          } else {
+            ia = kage.kMinWidthT;
+          }
           ib = 0;
         }
         else{
@@ -745,7 +757,11 @@ function cdDrawCurveU(kage, polygons, x1, y1, sx1, sy1, sx2, sy2, x2, y2, ta1, t
           ib = Math.cos(ir) * kage.kWidth;
         }
         else if(ix == 0){
-          ia = kage.kWidth;
+          if (iy < 0) {
+            ia = -kage.kWidth;
+          } else {
+            ia = kage.kWidth;
+          }
           ib = 0;
         }
         else{
