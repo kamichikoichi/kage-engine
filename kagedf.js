@@ -5,6 +5,99 @@ function dfDrawFont(kage, polygons, a1, a2, a3, x1, y1, x2, y2, x3, y3, x4, y4){
   if(kage.kShotai == kage.kMincho){
     switch(a1 % 100){ // ... no need to divide
     case 0:
+      if(a2 == 98){
+        for(var i = 0; i < polygons.array.length; i++){
+          var inside = true;
+          for(var j = 0; j < polygons.array[i].array.length; j++){
+            if(x1 > polygons.array[i].array[j].x || polygons.array[i].array[j].x > x2 ||
+               y1 > polygons.array[i].array[j].y || polygons.array[i].array[j].y > y2){
+              inside = false;
+            }
+          }
+          if(inside){
+            for(var j = 0; j < polygons.array[i].array.length; j++){
+              polygons.array[i].array[j].x = x2 - (polygons.array[i].array[j].x - x1);
+              polygons.array[i].array[j].x = Math.floor(polygons.array[i].array[j].x * 10) / 10;
+            }
+          }
+        }
+      } else if(a2 == 97){
+        for(var i = 0; i < polygons.array.length; i++){
+          var inside = true;
+          for(var j = 0; j < polygons.array[i].array.length; j++){
+            if(x1 > polygons.array[i].array[j].x || polygons.array[i].array[j].x > x2 ||
+               y1 > polygons.array[i].array[j].y || polygons.array[i].array[j].y > y2){
+              inside = false;
+            }
+          }
+          if(inside){
+            for(var j = 0; j < polygons.array[i].array.length; j++){
+              polygons.array[i].array[j].y = y2 - (polygons.array[i].array[j].y - y1);
+              polygons.array[i].array[j].y = Math.floor(polygons.array[i].array[j].y * 10) / 10;
+            }
+          }
+        }
+      } else if(a2 == 99 && a3 == 1){
+        for(var i = 0; i < polygons.array.length; i++){
+          var inside = true;
+          for(var j = 0; j < polygons.array[i].array.length; j++){
+            if(x1 > polygons.array[i].array[j].x || polygons.array[i].array[j].x > x2 ||
+               y1 > polygons.array[i].array[j].y || polygons.array[i].array[j].y > y2){
+              inside = false;
+            }
+          }
+          if(inside){
+            for(var j = 0; j < polygons.array[i].array.length; j++){
+              var x = polygons.array[i].array[j].x;
+              var y = polygons.array[i].array[j].y;
+              polygons.array[i].array[j].x = x1 + (y2 - y);
+              polygons.array[i].array[j].y = y1 + (x - x1);
+              polygons.array[i].array[j].x = Math.floor(polygons.array[i].array[j].x * 10) / 10;
+              polygons.array[i].array[j].y = Math.floor(polygons.array[i].array[j].y * 10) / 10;
+            }
+          }
+        }
+      } else if(a2 == 99 && a3 == 2){
+        for(var i = 0; i < polygons.array.length; i++){
+          var inside = true;
+          for(var j = 0; j < polygons.array[i].array.length; j++){
+            if(x1 > polygons.array[i].array[j].x || polygons.array[i].array[j].x > x2 ||
+               y1 > polygons.array[i].array[j].y || polygons.array[i].array[j].y > y2){
+              inside = false;
+            }
+          }
+          if(inside){
+            for(var j = 0; j < polygons.array[i].array.length; j++){
+              var x = polygons.array[i].array[j].x;
+              var y = polygons.array[i].array[j].y;
+              polygons.array[i].array[j].x = x2 - (x - x1);
+              polygons.array[i].array[j].y = y2 - (y - y1);
+              polygons.array[i].array[j].x = Math.floor(polygons.array[i].array[j].x * 10) / 10;
+              polygons.array[i].array[j].y = Math.floor(polygons.array[i].array[j].y * 10) / 10;
+            }
+          }
+        }
+      } else if(a2 == 99 && a3 == 3){
+        for(var i = 0; i < polygons.array.length; i++){
+          var inside = true;
+          for(var j = 0; j < polygons.array[i].array.length; j++){
+            if(x1 > polygons.array[i].array[j].x || polygons.array[i].array[j].x > x2 ||
+               y1 > polygons.array[i].array[j].y || polygons.array[i].array[j].y > y2){
+              inside = false;
+            }
+          }
+          if(inside){
+            for(var j = 0; j < polygons.array[i].array.length; j++){
+              var x = polygons.array[i].array[j].x;
+              var y = polygons.array[i].array[j].y;
+              polygons.array[i].array[j].x = x1 + (y - y1);
+              polygons.array[i].array[j].y = y2 - (x - x1);
+              polygons.array[i].array[j].x = Math.floor(polygons.array[i].array[j].x * 10) / 10;
+              polygons.array[i].array[j].y = Math.floor(polygons.array[i].array[j].y * 10) / 10;
+            }
+          }
+        }
+      }
       break;
     case 1:
       if(a3 % 100 == 4){
