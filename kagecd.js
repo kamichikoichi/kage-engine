@@ -374,7 +374,7 @@ function cdDrawCurveU(kage, polygons, x1, y1, sx1, sy1, sx2, sy2, x2, y2, ta1, t
     YY = Math.sin(rad) * v;
     
     if(a1 == 12){
-      if(x1 == x2){
+      if(x1 == sx1){
         poly= new Polygon();
         poly.push(x1 - kMinWidthT, y1);
         poly.push(x1 + kMinWidthT, y1);
