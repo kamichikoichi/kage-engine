@@ -68,6 +68,7 @@ function isCrossBoxWithOthers(strokesArray, i, bx1, by1, bx2, by2){ // boolean
     case 2:
     case 12:
     case 3:
+    case 4:
       if(isCrossBox(strokesArray[j][5],
                     strokesArray[j][6],
                     strokesArray[j][7],
@@ -108,6 +109,7 @@ function isCrossWithOthers(strokesArray, i, bx1, by1, bx2, by2){ // boolean
     case 2:
     case 12:
     case 3:
+    case 4:
       if(isCross(strokesArray[j][5],
                  strokesArray[j][6],
                  strokesArray[j][7],
