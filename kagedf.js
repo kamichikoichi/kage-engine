@@ -141,8 +141,8 @@ function dfDrawFont(kage, polygons, a1, a2, a3, x1, y1, x2, y2, x3, y3, x4, y4){
           tx1 = x3 - kage.kMage * Math.cos(rad) * v;
           ty1 = y3 - kage.kMage * Math.sin(rad) * v;
         }
-        cdDrawCurve(kage, polygons, x1, y1, x2, y2, tx1, ty1, a2, 1);
-        cdDrawCurve(kage, polygons, tx1, ty1, x3, y3, x3 - kage.kMage, y3, 1, a3 + 10);
+        cdDrawCurve(kage, polygons, x1, y1, x2, y2, tx1, ty1, a2, 0);
+        cdDrawCurve(kage, polygons, tx1, ty1, x3, y3, x3 - kage.kMage, y3, Math.floor(a2 / 1000) * 1000 + 2, a3 + 10);
       }
       else if(a3 == 5){
         cdDrawCurve(kage, polygons, x1, y1, x2, y2, x3, y3, a2, 15);

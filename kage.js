@@ -389,6 +389,7 @@ function Kage(size){
     this.kAdjustUrokoLine = ([13, 15, 18]); // check for crossing. corresponds to length
   } else {
     this.kMinWidthY = 2;
+    this.kMinWidthU = 2;
     this.kMinWidthT = 6;
     this.kWidth = 5;
     this.kKakato = 3;
