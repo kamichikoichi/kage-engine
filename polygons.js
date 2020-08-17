@@ -70,7 +70,7 @@ function Polygons(){
       }
       buffer += "</svg>\n";
     } else {
-      buffer += "<g fill=\"black\">\n";
+      buffer += "<g fill=\"black\" fill-rule=\"evenodd\">\n";
       for(var i = 0; i < this.array.length; i++){
         buffer += "<polygon points=\"";
         for(var j = 0; j < this.array[i].array.length; j++){
