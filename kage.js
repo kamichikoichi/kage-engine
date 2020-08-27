@@ -94,7 +94,7 @@ function Kage(size){
   function getEachStrokesOfBuhin(buhin, x1, y1, x2, y2, sx, sy, sx2, sy2){
     var temp = this.getEachStrokes(buhin);
     var result = new Array();
-    var box = this.getBox(buhin);
+    var box = this.getBox(temp);
       if(sx != 0 || sy != 0){
 	  if(sx > 100){
 	      sx -= 200;
@@ -307,14 +307,13 @@ function Kage(size){
   }
   Kage.prototype.adjustKakato = adjustKakato;
   
-  function getBox(glyph){ // minX, minY, maxX, maxY
+  function getBox(strokes){ // minX, minY, maxX, maxY
       var a = new Object();
       a.minX = 200;
       a.minY = 200;
       a.maxX = 0;
       a.maxY = 0;
       
-      var strokes = this.getEachStrokes(glyph);
       for(var i = 0; i < strokes.length; i++){
 	  if(strokes[i][0] == 0){ continue; }
 	  a.minX = Math.min(a.minX, strokes[i][3]);
