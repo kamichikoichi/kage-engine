@@ -8,7 +8,7 @@ function Kage(size){
   
   function makeGlyph2(polygons, data){ // void
       if(data != ""){
-	  var strokesArray = this.adjustKirikuchi(this.adjustUroko2(this.adjustUroko(this.adjustKakato(this.adjustTate(this.adjustMage(this.adjustHane(this.getEachStrokes(data))))))));
+	  var strokesArray = this.adjustStrokes(this.getEachStrokes(data));
 	  for(var i = 0; i < strokesArray.length; i++){
 	      dfDrawFont(this, polygons,
 			 strokesArray[i][0],
@@ -30,7 +30,7 @@ function Kage(size){
   function makeGlyph3(data){ // void
       var result = new Array();
       if(data != ""){
-	  var strokesArray = this.adjustKirikuchi(this.adjustUroko2(this.adjustUroko(this.adjustKakato(this.adjustTate(this.adjustMage(this.adjustHane(this.getEachStrokes(data))))))));
+	  var strokesArray = this.adjustStrokes(this.getEachStrokes(data));
 	  for(var i = 0; i < strokesArray.length; i++){
 	      var polygons = new Polygons();
 	      dfDrawFont(this, polygons,
@@ -131,6 +131,20 @@ function Kage(size){
     return result;
   }
   Kage.prototype.getEachStrokesOfBuhin = getEachStrokesOfBuhin;
+  
+  function adjustStrokes(strokesArray){
+    if(this.kShotai == this.kMincho){
+      strokesArray = this.adjustHane(strokesArray);
+      strokesArray = this.adjustMage(strokesArray);
+      strokesArray = this.adjustTate(strokesArray);
+      strokesArray = this.adjustKakato(strokesArray);
+      strokesArray = this.adjustUroko(strokesArray);
+      strokesArray = this.adjustUroko2(strokesArray);
+      strokesArray = this.adjustKirikuchi(strokesArray);
+    }
+    return strokesArray;
+  }
+  Kage.prototype.adjustStrokes = adjustStrokes;
   
   function adjustHane(sa){ // strokesArray
       for(var i = 0; i < sa.length; i++){
