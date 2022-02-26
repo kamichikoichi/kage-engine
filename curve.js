@@ -38,10 +38,63 @@ function divide_curve(kage, x1, y1, sx1, sy1, x2, y2, curve, div_curve, off_curv
 }
 
 // ------------------------------------------------------------------
+function calculateBezier(x1, y1, sx1, sy1, sx2, sy2, x2, y2, t, width){
+  var x, y, ix, iy, ir, ia, ib;
+  if(sx1 == sx2 && sy1 == sy2){ // Spline
+    // calculate a dot
+    x = ((1.0 - t) * (1.0 - t) * x1 + 2.0 * t * (1.0 - t) * sx1 + t * t * x2);
+    y = ((1.0 - t) * (1.0 - t) * y1 + 2.0 * t * (1.0 - t) * sy1 + t * t * y2);
+    
+    // KATAMUKI of vector by BIBUN
+    ix = (x1 - 2.0 * sx1 + x2) * 2.0 * t + (-2.0 * x1 + 2.0 * sx1);
+    iy = (y1 - 2.0 * sy1 + y2) * 2.0 * t + (-2.0 * y1 + 2.0 * sy1);
+  }
+  else{
+    // calculate a dot
+    x = (1.0 - t) * (1.0 - t) * (1.0 - t) * x1 + 3.0 * t * (1.0 - t) * (1.0 - t) * sx1 + 3 * t * t * (1.0 - t) * sx2 + t * t * t * x2;
+    y = (1.0 - t) * (1.0 - t) * (1.0 - t) * y1 + 3.0 * t * (1.0 - t) * (1.0 - t) * sy1 + 3 * t * t * (1.0 - t) * sy2 + t * t * t * y2;
+    // KATAMUKI of vector by BIBUN
+    ix = t * t * (-3 * x1 + 9 * sx1 + -9 * sx2 + 3 * x2) + t * (6 * x1 + -12 * sx1 + 6 * sx2) + -3 * x1 + 3 * sx1;
+    iy = t * t * (-3 * y1 + 9 * sy1 + -9 * sy2 + 3 * y2) + t * (6 * y1 + -12 * sy1 + 6 * sy2) + -3 * y1 + 3 * sy1;
+  }
+
+  // line SUICHOKU by vector
+  if(ix != 0 && iy != 0){
+    ir = Math.atan(iy / ix * -1);
+    ia = Math.sin(ir) * width;
+    ib = Math.cos(ir) * width;
+  }
+  else if(ix == 0){
+    if (iy < 0) {
+      ia = -width;
+    } else {
+      ia = width;
+    }
+    ib = 0;
+  }
+  else{
+    ia = 0;
+    ib = width;
+  }
+  
+  //reverse if vector is going 2nd/3rd quadrants
+  if(ix <= 0){
+    ia = ia * -1;
+    ib = ib * -1;
+  }
+  return {
+    x: x,
+    y: y,
+    ia: ia,
+    ib: ib,
+  };
+}
+
+// ------------------------------------------------------------------
 function find_offcurve(kage, curve, sx, sy, result){
   var nx1, ny1, nx2, ny2, tx, ty;
   var minx, miny, count, diff;
-  var tt, t, x, y, ix, iy;
+  var tt, t, x, y, bezier;
   var mindiff = 100000;
   var area = 8;
   var mesh = 2;
@@ -64,13 +117,9 @@ function find_offcurve(kage, curve, sx, sy, result){
       for(tt = 0; tt < curve.length; tt++){
         t = tt / curve.length;
         
-        //calculate a dot
-        x = ((1.0 - t) * (1.0 - t) * nx1 + 2.0 * t * (1.0 - t) * tx + t * t * nx2);
-        y = ((1.0 - t) * (1.0 - t) * ny1 + 2.0 * t * (1.0 - t) * ty + t * t * ny2);
-        
-        //KATAMUKI of vector by BIBUN
-        ix = (nx1 - 2.0 * tx + nx2) * 2.0 * t + (-2.0 * nx1 + 2.0 * tx);
-        iy = (ny1 - 2.0 * ty + ny2) * 2.0 * t + (-2.0 * ny1 + 2.0 * ty);
+        bezier = calculateBezier(nx1, ny1, tx, ty, tx, ty, nx2, ny2, t, 0);
+        x = bezier.x;
+        y = bezier.y;
         
         diff += (curve[count][0] - x) * (curve[count][0] - x) + (curve[count][1] - y) * (curve[count][1] - y);
         if(diff > mindiff){
@@ -93,13 +142,9 @@ function find_offcurve(kage, curve, sx, sy, result){
       for(tt = 0; tt < curve.length; tt++){
         t = tt / curve.length;
         
-        //calculate a dot
-        x = ((1.0 - t) * (1.0 - t) * nx1 + 2.0 * t * (1.0 - t) * tx + t * t * nx2);
-        y = ((1.0 - t) * (1.0 - t) * ny1 + 2.0 * t * (1.0 - t) * ty + t * t * ny2);
-        
-        //KATAMUKI of vector by BIBUN
-        ix = (nx1 - 2.0 * tx + nx2) * 2.0 * t + (-2.0 * nx1 + 2.0 * tx);
-        iy = (ny1 - 2.0 * ty + ny2) * 2.0 * t + (-2.0 * ny1 + 2.0 * ty);
+        bezier = calculateBezier(nx1, ny1, tx, ty, tx, ty, nx2, ny2, t, 0);
+        x = bezier.x;
+        y = bezier.y;
         
         diff += (curve[count][0] - x) * (curve[count][0] - x) + (curve[count][1] - y) * (curve[count][1] - y);
         if(diff > mindiff){
@@ -126,7 +171,7 @@ function find_offcurve(kage, curve, sx, sy, result){
 
 // ------------------------------------------------------------------
 function get_candidate(kage, curve, a1, a2, x1, y1, sx1, sy1, x2, y2, opt3, opt4){
-  var x, y, ix, iy, ir, ia, ib, tt, t, deltad;
+  var x, y, bezier, ia, ib, tt, t, deltad;
   var hosomi = 0.5;
   
   curve[0] = new Array();
@@ -135,27 +180,11 @@ function get_candidate(kage, curve, a1, a2, x1, y1, sx1, sy1, x2, y2, opt3, opt4
   for(tt = 0; tt <= 1000; tt = tt + kage.kRate){
     t = tt / 1000;
     
-    //calculate a dot
-    x = ((1.0 - t) * (1.0 - t) * x1 + 2.0 * t * (1.0 - t) * sx1 + t * t * x2);
-    y = ((1.0 - t) * (1.0 - t) * y1 + 2.0 * t * (1.0 - t) * sy1 + t * t * y2);
-    
-    //KATAMUKI of vector by BIBUN
-    ix = (x1 - 2.0 * sx1 + x2) * 2.0 * t + (-2.0 * x1 + 2.0 * sx1);
-    iy = (y1 - 2.0 * sy1 + y2) * 2.0 * t + (-2.0 * y1 + 2.0 * sy1);
-    //line SUICHOKU by vector
-    if(ix != 0 && iy != 0){
-      ir = Math.atan(iy / ix * -1);
-      ia = Math.sin(ir) * (kage.kMinWidthT);
-      ib = Math.cos(ir) * (kage.kMinWidthT);
-    }
-    else if(ix == 0){
-      ia = kage.kMinWidthT;
-      ib = 0;
-    }
-    else{
-      ia = 0;
-      ib = kage.kMinWidthT;
-    }
+    bezier = calculateBezier(x1, y1, sx1, sy1, sx1, sy1, x2, y2, t, kage.kMinWidthT);
+    x = bezier.x;
+    y = bezier.y;
+    ia = bezier.ia;
+    ib = bezier.ib;
     
     if(a1 == 7 && a2 == 0){ // L2RD: fatten
       deltad = Math.pow(t, hosomi) * kage.kL2RDfatten;
@@ -176,12 +205,6 @@ function get_candidate(kage, curve, a1, a2, x1, y1, sx1, sy1, x2, y2, opt3, opt4
     }
     ia = ia * deltad;
     ib = ib * deltad;
-    
-    //reverse if vector is going 2nd/3rd quadrants
-    if(ix <= 0){
-      ia = ia * -1;
-      ib = ib * -1;
-    }
     
     temp = new Array(2);
     temp[0] = x - ia;
