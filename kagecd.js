@@ -1,7 +1,7 @@
 function cdDrawCurveU(kage, polygons, x1, y1, sx1, sy1, sx2, sy2, x2, y2, ta1, ta2){
   var rad, t;
   var x, y, v;
-  var ix, iy, ia, ib, ir;
+  var bezier, ia, ib;
   var tt;
   var delta;
   var deltad;
@@ -156,32 +156,11 @@ function cdDrawCurveU(kage, polygons, x1, y1, sx1, sy1, sx2, sy2, x2, y2, ta1, t
         for(tt = 0; tt <= 1000; tt = tt + kage.kRate){
           t = tt / 1000;
           
-          // calculate a dot
-          x = ((1.0 - t) * (1.0 - t) * x1 + 2.0 * t * (1.0 - t) * sx1 + t * t * x2);
-          y = ((1.0 - t) * (1.0 - t) * y1 + 2.0 * t * (1.0 - t) * sy1 + t * t * y2);
-          
-          // KATAMUKI of vector by BIBUN
-          ix = (x1 - 2.0 * sx1 + x2) * 2.0 * t + (-2.0 * x1 + 2.0 * sx1);
-          iy = (y1 - 2.0 * sy1 + y2) * 2.0 * t + (-2.0 * y1 + 2.0 * sy1);
-          
-          // line SUICHOKU by vector
-          if(ix != 0 && iy != 0){
-            ir = Math.atan(iy / ix * -1);
-            ia = Math.sin(ir) * (kMinWidthT);
-            ib = Math.cos(ir) * (kMinWidthT);
-          }
-          else if(ix == 0){
-            if (iy < 0) {
-              ia = -kMinWidthT;
-            } else {
-              ia = kMinWidthT;
-            }
-            ib = 0;
-          }
-          else{
-            ia = 0;
-            ib = kMinWidthT;
-          }
+          bezier = calculateBezier(x1, y1, sx1, sy1, sx2, sy2, x2, y2, t, kMinWidthT);
+          x = bezier.x;
+          y = bezier.y;
+          ia = bezier.ia;
+          ib = bezier.ib;
           
           if((a1 == 7 || a1 == 27) && a2 == 0){ // L2RD: fatten
             deltad = Math.pow(t, hosomi) * kage.kL2RDfatten;
@@ -202,12 +181,6 @@ function cdDrawCurveU(kage, polygons, x1, y1, sx1, sy1, sx2, sy2, x2, y2, ta1, t
           }
           ia = ia * deltad;
           ib = ib * deltad;
-          
-          //reverse if vector is going 2nd/3rd quadrants
-          if(ix <= 0){
-            ia = ia * -1;
-            ib = ib * -1;
-          }
           
           //copy to polygon structure
           poly.push(x - ia, y - ib);
@@ -268,31 +241,11 @@ function cdDrawCurveU(kage, polygons, x1, y1, sx1, sy1, sx2, sy2, x2, y2, ta1, t
       for(tt = 0; tt <= 1000; tt = tt + kage.kRate){
         t = tt / 1000;
         
-        // calculate a dot
-        x = (1.0 - t) * (1.0 - t) * (1.0 - t) * x1 + 3.0 * t * (1.0 - t) * (1.0 - t) * sx1 + 3 * t * t * (1.0 - t) * sx2 + t * t * t * x2;
-        y = (1.0 - t) * (1.0 - t) * (1.0 - t) * y1 + 3.0 * t * (1.0 - t) * (1.0 - t) * sy1 + 3 * t * t * (1.0 - t) * sy2 + t * t * t * y2;
-        // KATAMUKI of vector by BIBUN
-        ix = t * t * (-3 * x1 + 9 * sx1 + -9 * sx2 + 3 * x2) + t * (6 * x1 + -12 * sx1 + 6 * sx2) + -3 * x1 + 3 * sx1;
-        iy = t * t * (-3 * y1 + 9 * sy1 + -9 * sy2 + 3 * y2) + t * (6 * y1 + -12 * sy1 + 6 * sy2) + -3 * y1 + 3 * sy1;
-        
-        // line SUICHOKU by vector
-        if(ix != 0 && iy != 0){
-          ir = Math.atan(iy / ix * -1);
-          ia = Math.sin(ir) * (kMinWidthT);
-          ib = Math.cos(ir) * (kMinWidthT);
-        }
-        else if(ix == 0){
-          if (iy < 0) {
-            ia = -kMinWidthT;
-          } else {
-            ia = kMinWidthT;
-          }
-          ib = 0;
-        }
-        else{
-          ia = 0;
-          ib = kMinWidthT;
-        }
+        bezier = calculateBezier(x1, y1, sx1, sy1, sx2, sy2, x2, y2, t, kMinWidthT);
+        x = bezier.x;
+        y = bezier.y;
+        ia = bezier.ia;
+        ib = bezier.ib;
         
         if((a1 == 7 || a1 == 27) && a2 == 0){ // L2RD: fatten
           deltad = Math.pow(t, hosomi) * kage.kL2RDfatten;
@@ -311,12 +264,6 @@ function cdDrawCurveU(kage, polygons, x1, y1, sx1, sy1, sx2, sy2, x2, y2, ta1, t
         }
         ia = ia * deltad;
         ib = ib * deltad;
-        
-        //reverse if vector is going 2nd/3rd quadrants
-        if(ix <= 0){
-          ia = ia * -1;
-          ib = ib * -1;
-        }
         
         //copy to polygon structure
         poly.push(x - ia, y - ib);
@@ -735,63 +682,11 @@ function cdDrawCurveU(kage, polygons, x1, y1, sx1, sy1, sx2, sy2, x2, y2, ta1, t
     for(tt = 0; tt <= 1000; tt = tt + kage.kRate){
       t = tt / 1000;
       
-      if(sx1 == sx2 && sy1 == sy2){
-        //calculating each point
-        x = ((1.0 - t) * (1.0 - t) * x1 + 2.0 * t * (1.0 - t) * sx1 + t * t * x2);
-        y = ((1.0 - t) * (1.0 - t) * y1 + 2.0 * t * (1.0 - t) * sy1 + t * t * y2);
-        
-        //SESSEN NO KATAMUKI NO KEISAN(BIBUN)
-        ix = (x1 - 2.0 * sx1 + x2) * 2.0 * t + (-2.0 * x1 + 2.0 * sx1);
-        iy = (y1 - 2.0 * sy1 + y2) * 2.0 * t + (-2.0 * y1 + 2.0 * sy1);
-      } else {
-      }
-      //SESSEN NI SUICHOKU NA CHOKUSEN NO KEISAN
-      if(kage.kShotai == kage.kMincho){ //always false ?
-        if(ix != 0 && iy != 0){
-          ir = Math.atan(iy / ix * -1.0);
-          ia = Math.sin(ir) * kage.kMinWidthT;
-          ib = Math.cos(ir) * kage.kMinWidthT;
-        }
-        else if(ix == 0){
-          if (iy < 0) {
-            ia = -kage.kMinWidthT;
-          } else {
-            ia = kage.kMinWidthT;
-          }
-          ib = 0;
-        }
-        else{
-          ia = 0;
-          ib = kage.kMinWidthT;
-        }
-        ia = ia * Math.sqrt(1.0 - t);
-        ib = ib * Math.sqrt(1.0 - t);
-      }
-      else{
-        if(ix != 0 && iy != 0){
-          ir = Math.atan(iy / ix * -1.0);
-          ia = Math.sin(ir) * kage.kWidth;
-          ib = Math.cos(ir) * kage.kWidth;
-        }
-        else if(ix == 0){
-          if (iy < 0) {
-            ia = -kage.kWidth;
-          } else {
-            ia = kage.kWidth;
-          }
-          ib = 0;
-        }
-        else{
-          ia = 0;
-          ib = kage.kWidth;
-        }
-      }
-      
-      //reverse if vector is going 2nd/3rd quadrants
-      if(ix <= 0){
-        ia = ia * -1;
-        ib = ib * -1;
-      }
+      bezier = calculateBezier(x1, y1, sx1, sy1, sx2, sy2, x2, y2, t, kage.kWidth);
+      x = bezier.x;
+      y = bezier.y;
+      ia = bezier.ia;
+      ib = bezier.ib;
       
       //save to polygon
       poly.push(x - ia, y - ib);
