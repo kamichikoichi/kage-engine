@@ -413,7 +413,7 @@ function cdDrawCurveU(kage, polygons, x1, y1, sx1, sy1, sx2, sy2, x2, y2, ta1, t
       poly.push(x1 - cornerOffset + kMinWidthT, y1 + kMinWidthT - 1);
       if (a1 == 27) {
         poly.push(x1 - cornerOffset, y1 + kMinWidthT + 2);
-        poly.push(x1 - cornerOffset, y1);
+        poly.push(x1 - cornerOffset, y1 + 0.5);
       } else {
         poly.push(x1 - cornerOffset - kMinWidthT, y1 + kMinWidthT + 4);
       }
