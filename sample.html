@@ -28,7 +28,12 @@ function draw() {
   ctx.beginPath();
   ctx.moveTo(polygons.array[i].array[0].x, polygons.array[i].array[0].y);
   for(var j = 1; j < polygons.array[i].array.length; j++){
-   ctx.lineTo(polygons.array[i].array[j].x, polygons.array[i].array[j].y);
+    if(polygons.array[i].array[j].off){
+      ctx.quadraticCurveTo(polygons.array[i].array[j].x, polygons.array[i].array[j].y, polygons.array[i].array[j+1].x, polygons.array[i].array[j+1].y);
+      j++;
+    }else{
+      ctx.lineTo(polygons.array[i].array[j].x, polygons.array[i].array[j].y);
+    }
   }
   ctx.closePath();
   ctx.fill();
