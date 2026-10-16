@@ -12,6 +12,15 @@
 function draw() {
  var canvas = document.getElementById("canvas");
  var ctx = canvas.getContext("2d");
+
+ var dpr = window.devicePixelRatio || 1;
+ var originalWidth = canvas.width;
+ var originalHeight = canvas.height;
+ canvas.width = Math.round(originalWidth * dpr);
+ canvas.height = Math.round(originalHeight * dpr);
+ canvas.style.width = `${originalWidth}px`;
+ canvas.style.height = `${originalHeight}px`;
+ ctx.scale(dpr, dpr);
  
  var kage = new Kage();
  kage.kUseCurve = false;
